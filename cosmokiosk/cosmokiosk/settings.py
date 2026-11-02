@@ -9,27 +9,29 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
 from pathlib import Path
+import environ
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+env = environ.Env(
+    DEBUG=(bool, False)
+)
+environ.Env.read_env(BASE_DIR.parent / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ojm^+4n0-p!uzf++12+ttph%@uwk@1t$8bqt978#r7gbk=w8w-'
+# SECRET_KEY = 'django-insecure-ojm^+4n0-p!uzf++12+ttph%@uwk@1t$8bqt978#r7gbk=w8w-'
+SECRET_KEY=env.str('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = env.bool('DEBUG')
 
-ALLOWED_HOSTS = [
-    '10.72.133.199', '127.0.0.1'
-]
-
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
 # Application definition
 
@@ -88,8 +90,11 @@ WSGI_APPLICATION = 'cosmokiosk.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'cosmetology_kiosk_database',
+        'PASSWORD': env.str("DATABASE_PASSWORD"),
+        'HOST': 'localhost',
+        "PORT": '5432'
     }
 }
 
