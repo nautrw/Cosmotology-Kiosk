@@ -91,9 +91,10 @@ WSGI_APPLICATION = 'cosmokiosk.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cosmetology_kiosk_database',
-        'PASSWORD': env.str("DATABASE_PASSWORD"),
-        'HOST': 'localhost',
+        'NAME': 'cosmetology_kiosk',
+        'USER': env.str('DATABASE_USER'),
+        'PASSWORD': 'root',
+        'HOST': '0.0.0.0',
         "PORT": '5432'
     }
 }
@@ -135,6 +136,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    "/var/www/static"
+]
+
+STATIC_ROOT = BASE_DIR / "static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
