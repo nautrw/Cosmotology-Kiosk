@@ -93,9 +93,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'cosmetology_kiosk',
         'USER': env.str('DATABASE_USER'),
-        'PASSWORD': 'root',
-        'HOST': '0.0.0.0',
-        "PORT": '5432'
+        'PASSWORD': env.str('DATABASE_PASSWORD'),
+        'HOST': env.str('DATABASE_HOST'),
+        "PORT": end.str('DATABASE_PORT')
     }
 }
 
