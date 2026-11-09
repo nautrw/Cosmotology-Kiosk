@@ -94,8 +94,8 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'cosmetology_kiosk_database',
         'PASSWORD': env.str("DATABASE_PASSWORD"),
-        'HOST': 'localhost',
-        "PORT": '5432'
+        'HOST': env.str('DATABASE_HOST'),
+        "PORT": env.str('DATABASE_PORT')
     } if not DEBUG else {
         'ENGINE': "django.db.backends.sqlite3",
         "NAME": BASE_DIR / "db.sqlite3"
@@ -139,6 +139,11 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [
+    "/var/www/static"
+]
+
+STATIC_ROOT = BASE_DIR / "static"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
