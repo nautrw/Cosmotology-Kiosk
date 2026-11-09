@@ -18,29 +18,36 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 IN_PROD = os.getenv("DJANGO_PRODUCTION", "False") == "True"
 
-env = environ.Env(
-    DEBUG=(bool, False)
-)
-environ.Env.read_env(BASE_DIR.parent / '.env')
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 if IN_PROD:
+    env = environ.Env(
+        DEBUG=(bool, False),
+    )
+    environ.Env.read_env(BASE_DIR.parent / '.env')
+
     DEBUG = env.bool('DEBUG')
     SECRET_KEY=env.str('SECRET_KEY')
-    DEBUG = env.bool('DEBUG')
     ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
-
 
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': 'cosmetology_kiosk_database',
-            'PASSWORD': env.str("DATABASE_PASSWORD"),
             'HOST': env.str('DATABASE_HOST'),
-            "PORT": env.str('DATABASE_PORT')
-        } if not DEBUG else {
+            "PORT": env.str('DATABASE_PORT'),
+            'USER': env.str('DATABASE_USER'),
+            'PASSWORD': env.str("DATABASE_PASSWORD"),
+        }
+    }
+else:
+    DEBUG = True
+    SECRET_KEY = 'django-insecure-ojm^+4n0-p!uzf++12+ttph%@uwk@1t$8bqt978#r7gbk=w8w-'
+    ALLOWED_HOSTS = ['127.0.0.1', '10.72.133.199']
+
+    DATABASES = {
+        'default': {
             'ENGINE': "django.db.backends.sqlite3",
             "NAME": BASE_DIR / "db.sqlite3"
         }
@@ -140,7 +147,8 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    "/var/www/static"
+    # "/var/www/static"
+    BASE_DIR / "staticfiles"
 ]
 
 STATIC_ROOT = BASE_DIR / "static"
