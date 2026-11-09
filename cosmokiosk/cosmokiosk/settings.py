@@ -29,6 +29,7 @@ environ.Env.read_env(BASE_DIR.parent / '.env')
 SECRET_KEY=env.str('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# TURN ON TO TEST LOCALLY
 DEBUG = env.bool('DEBUG')
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
@@ -95,6 +96,9 @@ DATABASES = {
         'PASSWORD': env.str("DATABASE_PASSWORD"),
         'HOST': 'localhost',
         "PORT": '5432'
+    } if not DEBUG else {
+        'ENGINE': "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3"
     }
 }
 
