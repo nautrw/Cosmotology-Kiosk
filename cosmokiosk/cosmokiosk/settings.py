@@ -16,6 +16,8 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+IN_PROD = os.getenv("DJANGO_PRODUCTION", "False") == "True"
+
 env = environ.Env(
     DEBUG=(bool, False)
 )
@@ -24,15 +26,25 @@ environ.Env.read_env(BASE_DIR.parent / '.env')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-ojm^+4n0-p!uzf++12+ttph%@uwk@1t$8bqt978#r7gbk=w8w-'
-SECRET_KEY=env.str('SECRET_KEY')
+if IN_PROD:
+    DEBUG = env.bool('DEBUG')
+    SECRET_KEY=env.str('SECRET_KEY')
+    DEBUG = env.bool('DEBUG')
+    ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-# TURN ON TO TEST LOCALLY
-DEBUG = env.bool('DEBUG')
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': 'cosmetology_kiosk_database',
+            'PASSWORD': env.str("DATABASE_PASSWORD"),
+            'HOST': env.str('DATABASE_HOST'),
+            "PORT": env.str('DATABASE_PORT')
+        } if not DEBUG else {
+            'ENGINE': "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3"
+        }
+    }
 
 # Application definition
 
@@ -89,18 +101,6 @@ WSGI_APPLICATION = 'cosmokiosk.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'cosmetology_kiosk_database',
-        'PASSWORD': env.str("DATABASE_PASSWORD"),
-        'HOST': env.str('DATABASE_HOST'),
-        "PORT": env.str('DATABASE_PORT')
-    } if not DEBUG else {
-        'ENGINE': "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3"
-    }
-}
 
 
 # Password validation
