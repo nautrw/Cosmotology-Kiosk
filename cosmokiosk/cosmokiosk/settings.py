@@ -34,7 +34,7 @@ if IN_PROD:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'cosmetology_kiosk_database',
+            'NAME': env.str('DATABASE_NAME'),
             'HOST': env.str('DATABASE_HOST'),
             "PORT": env.str('DATABASE_PORT'),
             'USER': env.str('DATABASE_USER'),
